@@ -11,9 +11,9 @@ var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXWYZ"
 func main() {
 	key := 5
 	//original := "A ligeira raposa marrom saltou sobre o cachorro cansado"
-	//original := "A compreensão e interpretação de texto são duas ações que estão relacionadas, uma vez que quando se compreende corretamente um texto e seu propósito comunicativo chegamos a determinadas conclusões (interpretação)."
+	original := "A compreensão e interpretação de texto são duas ações que estão relacionadas, uma vez que quando se compreende corretamente um texto e seu propósito comunicativo chegamos a determinadas conclusões (interpretação)."
 
-	original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
+	//original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
 	fmt.Printf("Original: %s\n\n", original)
 
 	original = replaceAscii(original)
@@ -34,8 +34,11 @@ func main() {
 
 	mapaCifra := sortKeys(freq(ciphered))
 	fmt.Println("Mapa cifrado  ", mapaCifra)
-	c1, c2, c3 := calculaChave(mapaPortugues, mapaCifra)
-	fmt.Printf("\nProváveis chaves: %d, %d, %d.\n", c1, c2, c3)
+
+	fmt.Println("\nProváveis chaves:", calculaChave(mapaPortugues, mapaCifra))
+
+	Chave := sortKeysInt(freqInt(calculaChave(mapaPortugues, mapaCifra)))
+	fmt.Println("\nProvável chave:", Chave)
 }
 
 func replaceAscii(result string) string {
@@ -50,34 +53,31 @@ func replaceAscii(result string) string {
 	for v, k := range m {
 		result = strings.ReplaceAll(result, v, k)
 	}
-
 	return result
 }
 
-func calculaChave(keysPortugues, keysCifra []string) (int, int, int) {
-	var result0, result1, result2 int
+func calculaChave(keysPortugues, keysCifra []string) [][]int {
 
-	c0 := int([]byte(keysCifra[0])[0])
-	p0 := int([]byte(keysPortugues[0])[0])
-	p1 := int([]byte(keysPortugues[1])[0])
-	p2 := int([]byte(keysPortugues[2])[0])
+	var res [][]int
+	var reslinha []int
 
-	res0 := p0 - c0
-	if res0 < 0 {
-		result0 = res0 * -1
+	for x := 0; x < 10; x++ {
+		for i := 0; i < 5; i++ {
+			c := int([]byte(keysCifra[x])[0])
+			p := int([]byte(keysPortugues[i])[0])
+			v := p - c
+			if v < 0 {
+				reslinha = append(reslinha, v*-1)
+			} else {
+				reslinha = append(reslinha, v)
+			}
+		}
+		//fmt.Println("reslinha", reslinha)
+		res = append(res, reslinha)
+		reslinha = nil
 	}
 
-	res1 := p1 - c0
-	if res1 < 0 {
-		result1 = res1 * -1
-	}
-
-	res2 := p2 - c0
-	if res2 < 0 {
-		result2 = res2 * -1
-	}
-
-	return result0, result1, result2
+	return res
 
 }
 
@@ -90,12 +90,37 @@ func sortKeys(mapa map[string]float32) []string {
 	sort.SliceStable(keys, func(i, j int) bool {
 		return mapa[keys[i]] > mapa[keys[j]]
 	})
-
 	for _, k := range keys {
 		result = append(result, k)
 	}
-
 	return result
+}
+
+func sortKeysInt(mapa map[string]int) []string {
+	keys := make([]string, 0, len(mapa))
+	var result []string
+	for k := range mapa {
+		keys = append(keys, k)
+	}
+	sort.SliceStable(keys, func(i, j int) bool {
+		return mapa[keys[i]] > mapa[keys[j]]
+	})
+	for _, k := range keys {
+		result = append(result, k)
+	}
+	return result
+}
+
+func freqInt(arr [][]int) int {
+	max := 0
+	freq := make(map[string]int)
+	for x := 0; x < 10; x++ {
+		for i := 0; i < 5; i++ {
+			freq[fmt.Sprint(arr[x][i])] = freq[fmt.Sprint(arr[x][i])] + 1
+		}
+	}
+	fmt.Println("freq", freq)
+	return max
 }
 
 func freq(text string) map[string]float32 {
