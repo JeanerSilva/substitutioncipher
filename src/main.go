@@ -19,11 +19,11 @@ func main() {
 
 	fmt.Printf("Original: %s\n\n", original)
 
-	original = replaceAscii(original)
+	originalAdaptada := replaceAscii(original)
 
-	fmt.Printf("Original adaptada: %s\n\n", original)
+	fmt.Printf("Original adaptada: %s\n\n", originalAdaptada)
 
-	ciphered := caesarEncrypt(original, key)
+	ciphered := caesarEncrypt(originalAdaptada, key)
 	fmt.Printf("Encriptada: %s\n\n", ciphered)
 
 	plain := caesarDecrypt(ciphered, key)
@@ -32,14 +32,14 @@ func main() {
 	mapaPortugues := sortKeys(estatisticaPortugues())
 	fmt.Println("Mapa portugues", mapaPortugues)
 
-	mapaOriginal := sortKeys(freq(original))
+	mapaOriginal := sortKeys(freq(originalAdaptada))
 	fmt.Println("Mapa original ", mapaOriginal)
 
 	mapaCifra := sortKeys(freq(ciphered))
 	fmt.Println("Mapa cifrado  ", mapaCifra)
 
 	chave := sortKeys(freqInt(calculaChave(mapaPortugues, mapaCifra)))
-	fmt.Println("\nChaves prováveis (mais que uma ocorrência) em ordem descrescente:", chave)
+	fmt.Println("\nChaves prováveis em ordem descrescente:", chave)
 
 	keyGuessed := chave[0]
 	keyGuessedInt, _ := strconv.Atoi(keyGuessed)
