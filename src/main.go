@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -11,9 +12,9 @@ var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXWYZ"
 func main() {
 	key := 5
 	//original := "A ligeira raposa marrom saltou sobre o cachorro cansado"
-	original := "A compreensão e interpretação de texto são duas ações que estão relacionadas, uma vez que quando se compreende corretamente um texto e seu propósito comunicativo chegamos a determinadas conclusões (interpretação)."
+	//original := "A compreensão e interpretação de texto são duas ações que estão relacionadas, uma vez que quando se compreende corretamente um texto e seu propósito comunicativo chegamos a determinadas conclusões (interpretação)."
 
-	//original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
+	original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
 	fmt.Printf("Original: %s\n\n", original)
 
 	original = replaceAscii(original)
@@ -35,10 +36,13 @@ func main() {
 	mapaCifra := sortKeys(freq(ciphered))
 	fmt.Println("Mapa cifrado  ", mapaCifra)
 
-	fmt.Println("\nProváveis chaves:", calculaChave(mapaPortugues, mapaCifra))
+	chave := sortKeys(freqInt(calculaChave(mapaPortugues, mapaCifra)))
+	fmt.Println("\nChaves prováveis em ordem descrescente", chave)
 
-	Chave := sortKeysInt(freqInt(calculaChave(mapaPortugues, mapaCifra)))
-	fmt.Println("\nProvável chave:", Chave)
+	keyGuessed := chave[0]
+	keyGuessedInt, _ := strconv.Atoi(keyGuessed)
+	fmt.Println("\nMensagem decifrada com a chave mais provável:\n", caesarDecrypt(ciphered, keyGuessedInt))
+
 }
 
 func replaceAscii(result string) string {
@@ -61,7 +65,7 @@ func calculaChave(keysPortugues, keysCifra []string) [][]int {
 	var res [][]int
 	var reslinha []int
 
-	for x := 0; x < 10; x++ {
+	for x := 0; x < 5; x++ {
 		for i := 0; i < 5; i++ {
 			c := int([]byte(keysCifra[x])[0])
 			p := int([]byte(keysPortugues[i])[0])
@@ -96,31 +100,15 @@ func sortKeys(mapa map[string]float32) []string {
 	return result
 }
 
-func sortKeysInt(mapa map[string]int) []string {
-	keys := make([]string, 0, len(mapa))
-	var result []string
-	for k := range mapa {
-		keys = append(keys, k)
-	}
-	sort.SliceStable(keys, func(i, j int) bool {
-		return mapa[keys[i]] > mapa[keys[j]]
-	})
-	for _, k := range keys {
-		result = append(result, k)
-	}
-	return result
-}
-
-func freqInt(arr [][]int) int {
-	max := 0
-	freq := make(map[string]int)
-	for x := 0; x < 10; x++ {
+func freqInt(arr [][]int) map[string]float32 {
+	freq := make(map[string]float32)
+	for x := 0; x < 5; x++ {
 		for i := 0; i < 5; i++ {
 			freq[fmt.Sprint(arr[x][i])] = freq[fmt.Sprint(arr[x][i])] + 1
 		}
 	}
-	fmt.Println("freq", freq)
-	return max
+	fmt.Println("\nMapa de frequência", freq)
+	return freq
 }
 
 func freq(text string) map[string]float32 {
@@ -131,7 +119,6 @@ func freq(text string) map[string]float32 {
 			freq[string(num)] = freq[string(num)] + 1.00
 		}
 	}
-	//tem que retornar a frequência e não a quantidade
 	return freq
 }
 
