@@ -37,7 +37,7 @@ func main() {
 	fmt.Println("Mapa cifrado  ", mapaCifra)
 
 	chave := sortKeys(freqInt(calculaChave(mapaPortugues, mapaCifra)))
-	fmt.Println("\nChaves prováveis em ordem descrescente", chave)
+	fmt.Println("\nChaves prováveis (mais que uma ocorrência) em ordem descrescente:", chave)
 
 	keyGuessed := chave[0]
 	keyGuessedInt, _ := strconv.Atoi(keyGuessed)
@@ -64,7 +64,7 @@ func calculaChave(keysPortugues, keysCifra []string) [][]int {
 
 	var res [][]int
 	var reslinha []int
-
+	fmt.Println("\nMatriz de probabilidades:")
 	for x := 0; x < 5; x++ {
 		for i := 0; i < 5; i++ {
 			c := int([]byte(keysCifra[x])[0])
@@ -76,7 +76,7 @@ func calculaChave(keysPortugues, keysCifra []string) [][]int {
 				reslinha = append(reslinha, v)
 			}
 		}
-		//fmt.Println("reslinha", reslinha)
+		fmt.Println(reslinha)
 		res = append(res, reslinha)
 		reslinha = nil
 	}
@@ -107,7 +107,7 @@ func freqInt(arr [][]int) map[string]float32 {
 			freq[fmt.Sprint(arr[x][i])] = freq[fmt.Sprint(arr[x][i])] + 1
 		}
 	}
-	fmt.Println("\nMapa de frequência", freq)
+	fmt.Println("\nMapa de frequência:", freq)
 	return freq
 }
 
