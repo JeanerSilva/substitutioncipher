@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXWYZ"
+var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXWYZ "
 
 func main() {
 	key := 5
@@ -15,6 +15,8 @@ func main() {
 	//original := "A compreensão e interpretação de texto são duas ações que estão relacionadas, uma vez que quando se compreende corretamente um texto e seu propósito comunicativo chegamos a determinadas conclusões (interpretação)."
 
 	original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
+	//original := "Qual é a velocidade dos seus downloads? Em poucos segundos, o teste do FAST.com faz uma estimativa da velocidade do seu provedor."
+
 	fmt.Printf("Original: %s\n\n", original)
 
 	original = replaceAscii(original)
