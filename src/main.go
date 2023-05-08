@@ -7,19 +7,19 @@ import (
 	"strings"
 )
 
-var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXWYZ "
+var alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 func main() {
 	key := 5
-	//original := "A ligeira raposa marrom saltou sobre o cachorro cansado"
+	original := "A ligeira raposa marrom saltou sobre o cachorro cansado"
 	//original := "A compreensão e interpretação de texto são duas ações que estão relacionadas, uma vez que quando se compreende corretamente um texto e seu propósito comunicativo chegamos a determinadas conclusões (interpretação)."
 
-	original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
+	//original := "Quem se interessa por aprender a falar Português já pode contar com um ensino eficiente. Com os nossos métodos conseguimos ensinar, sobretudo alunos iniciantes, por meio de textos práticos, que favorecem a boa leitura e consequente compreensão do que é ensinado."
 	//original := "Qual é a velocidade dos seus downloads? Em poucos segundos, o teste do FAST.com faz uma estimativa da velocidade do seu provedor."
 
 	fmt.Printf("Original: %s\n\n", original)
 
-	originalAdaptada := replaceAscii(original)
+	originalAdaptada := replaceAscii(strings.ToLower(original))
 
 	fmt.Printf("Original adaptada: %s\n\n", originalAdaptada)
 
@@ -71,7 +71,7 @@ func calculaChave(keysPortugues, keysCifra []string) [][]int {
 		for i := 0; i < 5; i++ {
 			c := int([]byte(keysCifra[x])[0])
 			p := int([]byte(keysPortugues[i])[0])
-			v := p - c
+			v := modulus(c-p, len(alphabet))
 			if v < 0 {
 				reslinha = append(reslinha, v*-1)
 			} else {
